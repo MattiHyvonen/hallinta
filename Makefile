@@ -63,10 +63,10 @@ buildGoogletest:
 	make -C $(googletestBuildPolku)
 
 clean:
-	rm -Rf $(objPolku)/*
-	rm -Rf $(testiObjPolku)/*
-	rm -f testikohde
-	rm -f kohde
+	rm -Rf $(objPolku)
+	rm -Rf $(testiObjPolku)
+	rm -f $(testikohde)
+	rm -f $(kohde)
 
 remove: clean
 	rm -Rf $(googletestBuildPolku)
