@@ -25,7 +25,7 @@ objektit = $(sourcet:$(srcPolku)/%.cpp=$(objPolku)/%.o)
 testiSourcet = $(wildcard $(testiSrcPolku)/*.cpp)
 testiObjektit = $(testiSourcet:$(testiSrcPolku)/%.cpp=$(testiObjPolku)/%.o)
 
-all: $(kohde)
+all: teeObjPolku $(kohde)
 
 $(kohde): $(objektit)
 	$(cc) $(objektit) $(lFlagit) -o $@
@@ -35,8 +35,14 @@ $(objektit): $(objPolku)/%.o : $(srcPolku)/%.cpp
 
 #TODO: jos .h -tiedostoja muutetaan, ei "make testit" aina löydä
 #		muutoksia, vaan on ajettava "make clean; make testit"!
-testit: buildGoogletest $(testikohde)
+testit: buildGoogletest teeObjPolku teeTestiObjPolku $(testikohde)
 	./$(testikohde)
+
+teeObjPolku:
+	mkdir -p $(objPolku)
+
+teeTestiObjPolku:
+	mkdir -p $(testiObjPolku)
 
 $(testikohde): $(testiObjektit)  $(filter-out obj/main.o,  $(objektit) )
 	$(cc) $(testiObjektit) $(filter-out obj/main.o,  $(objektit) ) \
