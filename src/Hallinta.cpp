@@ -5,22 +5,25 @@ void Hallinta::lisaaSubjekti(std::weak_ptr<Hallintarajapinta> p) {
 }
 
 void Hallinta::piirraKaikki() {
-  for(auto s : subjektit) {
-    /* Yritetään tehdä weak pointerista väliaikainen shared pointer. Jos
-      onnistuu, ts. jos weak pointer on validi, ajetaan sen kautta subjektin
-      funktio.
-    */
-    if(std::shared_ptr<Hallintarajapinta> tmpSubjekti = s.lock()) {
-      tmpSubjekti->piirra();
-    }
-  }
+  suoritaKaikille(HALLINTAFUNKTIO_PIIRRA);
 }
 
-//TODO: vähennettävä toistoa. Ks. piirraKaikki()
 void Hallinta::laskeKaikki() {
+  suoritaKaikille(HALLINTAFUNKTIO_LASKE);
+}
+
+void Hallinta::suoritaKaikille(Hallintafunktiot f) {
   for(auto s : subjektit) {
-    if(std::shared_ptr<Hallintarajapinta> tmpSubjekti = s.lock()) {
-      tmpSubjekti->laske();
+    std::shared_ptr<Hallintarajapinta> tmpSubjekti {s.lock() };
+    if(tmpSubjekti) {
+      switch(f) {
+        case HALLINTAFUNKTIO_LASKE:
+        tmpSubjekti->laske();
+        break;
+        case HALLINTAFUNKTIO_PIIRRA:
+        tmpSubjekti->piirra();
+        break;
+      }
     }
   }
 }
